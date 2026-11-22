@@ -22,6 +22,7 @@
 
         .top { display: flex; align-items: center; gap: 14px; padding: 14px 22px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
         .logo { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, #1f3a8a, #2f8f75); font-weight: 700; color: #fff; }
+        .brand { flex: 1; min-width: 0; }
         .brand b { display: block; font-size: 15px; }
         .brand span { color: var(--muted); font-size: 12px; }
         .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
@@ -32,7 +33,7 @@
         .demo { background: rgba(217, 180, 90, .12); border-bottom: 1px solid rgba(217, 180, 90, .3); color: var(--gold); padding: 7px 22px; font-size: 13px; }
 
         .grid { display: grid; grid-template-columns: 290px minmax(0, 1fr) 380px; gap: 16px; padding: 16px 22px; height: calc(100vh - 100px); min-height: 560px; }
-        .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-direction: column; min-height: 0; }
+        .card { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-direction: column; min-height: 0; }
         .card h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; padding: 14px 16px 8px; display: flex; justify-content: space-between; align-items: center; }
         .scroll { overflow-y: auto; min-height: 0; flex: 1; }
 
@@ -64,6 +65,8 @@
 
         .suggest { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 16px 10px; }
         .suggest button { background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 12.5px; color: var(--muted); cursor: pointer; }
+        .suggest.compact { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+        .suggest.compact button { flex: none; }
         .suggest button:hover { color: var(--text); border-color: var(--gold); }
         form.ask { display: flex; gap: 8px; padding: 12px 16px 16px; border-top: 1px solid var(--line); }
         form.ask input { flex: 1; min-width: 0; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; outline: none; }
@@ -89,7 +92,7 @@
             .top { padding: 12px 16px; }
             .chips { margin-left: 0; }
             .demo { padding: 7px 16px; }
-            .grid { grid-template-columns: 1fr; padding: 12px 16px; gap: 12px; }
+            .grid { grid-template-columns: minmax(0, 1fr); padding: 12px 16px; gap: 12px; }
             .grid .center { order: -1; height: 600px; }
             .grid .caps { max-height: 340px; }
             .msg, .tool { max-width: 94%; }
@@ -203,6 +206,7 @@
         if (!text.trim()) return;
         input.value = '';
         send.disabled = true;
+        $('suggest').classList.add('compact');
         add('msg user', esc(text));
         const typing = add('typing', '<i></i><i></i><i></i> agent is working');
 

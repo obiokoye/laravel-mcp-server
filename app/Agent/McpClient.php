@@ -16,7 +16,7 @@ class McpClient
 {
     private int $nextId = 1;
 
-    /** @var list<array{direction: string, message: array}> */
+    /** @var list<array{direction: string, message: object}> */
     private array $traffic = [];
 
     public function __construct(private readonly McpServer $server) {}
@@ -49,7 +49,7 @@ class McpClient
         }
     }
 
-    /** @return list<array{direction: string, message: array}> */
+    /** @return list<array{direction: string, message: object}> */
     public function traffic(): array
     {
         return $this->traffic;
@@ -74,16 +74,16 @@ class McpClient
     private function send(array $message): ?array
     {
         $json = json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-        $this->traffic[] = ['direction' => 'client → server', 'message' => json_decode($json, true)];
+        // Stored as decoded objects so empty params stay {} rather than [].
+        $this->traffic[] = ['direction' => 'client → server', 'message' => json_decode($json)];
 
         $replyJson = $this->server->handleJson($json);
         if ($replyJson === null) {
             return null;
         }
 
-        $reply = json_decode($replyJson, true);
-        $this->traffic[] = ['direction' => 'server → client', 'message' => $reply];
+        $this->traffic[] = ['direction' => 'server → client', 'message' => json_decode($replyJson)];
 
-        return $reply;
+        return json_decode($replyJson, true);
     }
 }
